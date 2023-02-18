@@ -91,5 +91,6 @@ public final class BaseConv {
       }
     }
     return Double.toString(value);
+    
   }
 }
