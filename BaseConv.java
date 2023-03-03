@@ -2,11 +2,15 @@ import java.util.Scanner;
 
 public final class BaseConv {
   public static void main(String[] args) {
-    Scanner input = new Scanner(System.in);
+    Scanner input;
+    int base;
+    String userNumber;
+
+    input = new Scanner(System.in);
     display("Enter base to convert from : ");
-    int base = input.nextInt();
+    base = input.nextInt();
     display("Enter a number : ");
-    String userNumber = input.next();
+    userNumber = input.next();
     input.close();
     String newValue = toBaseTen(userNumber, base);
     display("Your number in base 10 is : " + newValue);
@@ -69,9 +73,9 @@ public final class BaseConv {
 
   public static String toBaseTen(String fullNumber, int base) {
     String[] splitNumber = fullNumber.split("\\.", 2);
-    String num = splitNumber[0];
-    char[] numArray = num.toCharArray();
-    int numLength = numArray.length;
+    String num = splitNumber[0], dec;
+    char[] numArray = num.toCharArray(), decArray;
+    int numLength = numArray.length, decLength;
     double value = 0;
     double subValue;
     for (int i = 0; i < numLength; i++) {
@@ -81,9 +85,9 @@ public final class BaseConv {
     }
 
     if (splitNumber.length > 1) {
-      String dec = splitNumber[1];
-      char[] decArray = dec.toCharArray();
-      int decLength = decArray.length;
+      dec = splitNumber[1];
+      decArray = dec.toCharArray();
+      decLength = decArray.length;
       for (int i = 0; i < decLength; i++) {
         char n = decArray[i];
         subValue = power(base, -(i + 1)) * hexToNum(n);
