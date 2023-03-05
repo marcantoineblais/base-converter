@@ -13,7 +13,7 @@ public final class BaseConv {
     userNumber = input.next();
     input.close();
     baseTenValue = toBaseTen(userNumber, startBase);
-    for (int base = 2; base <= 16; base ++) {
+    for (int base = 2; base <= 10; base ++) {
       display("Your number in base " + base + " is : " + toBaseN(baseTenValue, base));
     }
   }
@@ -60,6 +60,18 @@ public final class BaseConv {
     return c;
   }
 
+  public static double power(int base, int exp) {
+    double result = 1;
+    for (int n = 0; n < Math.abs(exp); n ++) {
+      result *= base;
+    }
+
+    if (exp < 0)
+      result = 1 / result;
+
+    return result;
+  }
+
   public static String toBaseTen(String fullNumber, int base) {
     String[] splitNumber = fullNumber.split("\\.", 2);
     String num = splitNumber[0], dec;
@@ -80,7 +92,7 @@ public final class BaseConv {
       decLength = decArray.length;
       for (int i = 0; i < decLength; i++) {
         char n = decArray[i];
-        subValue = Math.pow(base, -(i + 1)) * hexToNum(n);
+        subValue = power(base, -(i + 1)) * hexToNum(n);
         value += subValue;
       }
     }
@@ -92,14 +104,14 @@ public final class BaseConv {
     String newNumber = "";
     int num = Integer.parseInt(splitNumber[0]);
     int exp = 0;
-    int subTotal = 0;
+    double subTotal = 0;
 
-    while (Math.pow(base, exp + 1) <= num) {
+    while (power(base, exp + 1) <= num) {
       exp ++;
     }
 
     for (int e = exp; e >= 0; e --) {
-      int positionValue = (int) Math.pow(base, e);
+      int positionValue = (int) power(base, e);
       int n = 0;
 
       while (subTotal + positionValue <= num) {
@@ -110,23 +122,22 @@ public final class BaseConv {
     }
 
     if (splitNumber.length > 1) {
-      double dec;
       String decStr = "0." + splitNumber[1];
+      double dec = Double.parseDouble(decStr);
       
-      dec = Double.parseDouble(decStr);
       newNumber += ".";
       subTotal = 0;
 
-      for (int e = -1; e >= -16; e --) {
-        double positionValue = Math.pow(base, e);
+      for (int e = -1; e >= -12; e --) {
+        Double positionValue = Math.round(power(base, e) * 1.0E12) * 1.0E-12;
         int n = 0;
 
-        while (subTotal + positionValue <= num) {
+        while (subTotal + positionValue <= dec) {
           subTotal += positionValue;
           n ++;
         }
-        newNumber += n;
-        if (subTotal == dec);
+        newNumber += Integer.toString(n);
+        if (subTotal == dec)
           break;
       }
     }
