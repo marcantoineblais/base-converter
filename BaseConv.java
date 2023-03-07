@@ -60,14 +60,11 @@ public final class BaseConv {
     return c;
   }
 
-  public static double power(int base, int exp) {
-    double result = 1;
+  public static int power(int base, int exp) {
+    int result = 1;
     for (int n = 0; n < Math.abs(exp); n ++) {
       result *= base;
     }
-
-    if (exp < 0)
-      result = 1 / result;
 
     return result;
   }
@@ -102,16 +99,27 @@ public final class BaseConv {
   public static String toBaseN(String fullNumber, int base) {
     String[] splitNumber = fullNumber.split("\\.", 2);
     String newNumber = "";
-    int num = Integer.parseInt(splitNumber[0]);
+    String numString = splitNumber[1].equals("0") ? splitNumber[0] : splitNumber[0]  + splitNumber[1];
+    int num = Integer.parseInt(numString);
+    int integerPart = Integer.parseInt(splitNumber[0]);
     int exp = 0;
-    double subTotal = 0;
+    int intExp = 0;
+    int subTotal = 0;
 
     while (power(base, exp + 1) <= num) {
       exp ++;
     }
 
+    while (power(base, intExp + 1) <= integerPart) {
+      intExp ++;
+    }
+
     for (int e = exp; e >= 0; e --) {
-      int positionValue = (int) power(base, e);
+      if (e == exp - intExp - 1) {
+        newNumber += ".";
+      }
+
+      int positionValue = power(base, e);
       int n = 0;
 
       while (subTotal + positionValue <= num) {
@@ -119,27 +127,6 @@ public final class BaseConv {
         n ++;
       }
       newNumber += numToHex(n);
-    }
-
-    if (splitNumber.length > 1) {
-      String decStr = "0." + splitNumber[1];
-      double dec = Double.parseDouble(decStr);
-      
-      newNumber += ".";
-      subTotal = 0;
-
-      for (int e = -1; e >= -12; e --) {
-        Double positionValue = Math.round(power(base, e) * 1.0E12) * 1.0E-12;
-        int n = 0;
-
-        while (subTotal + positionValue <= dec) {
-          subTotal += positionValue;
-          n ++;
-        }
-        newNumber += numToHex(n);
-        if (subTotal == dec)
-          break;
-      }
     }
 
     return newNumber;
