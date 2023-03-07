@@ -70,24 +70,25 @@ public final class BaseConv {
   }
 
   public static String toBaseTen(String fullNumber, int base) {
-    String[] splitNumber = fullNumber.split("\\.", -2);
+    String[] splitNumber = fullNumber.split("\\.|$", 2);
     String valueStr = "";
-    String numString = splitNumber[1].equals("0") ? splitNumber[0] : splitNumber[0]  + splitNumber[1];
+    String numString = splitNumber[0] + splitNumber[1];
     String[] numArray = numString.split("");
     int exp = numString.length() - 1;
     int value = 0;
     
     for (int e = exp; e >= 0; e --) {
-      int subValue = power(base, e) * hexToNum(numArray[(e + 1) - numArray.length]);
+      int subValue = power(base, e) * hexToNum(numArray[numArray.length - (e + 1)]);
       value += subValue;
     }
 
+    // NEED TO ADD THE DECIMAL POINT SOMEWHERE HERE
     valueStr = Double.toString(value / power(base, splitNumber[1].length()));
     return valueStr;
   }
 
   public static String toBaseN(String fullNumber, int base) {
-    String[] splitNumber = fullNumber.split("\\.", -2);
+    String[] splitNumber = fullNumber.split("\\.", 2);
     String newNumber = "";
     String numString = splitNumber[1].equals("0") ? splitNumber[0] : splitNumber[0]  + splitNumber[1];
     int num = Integer.parseInt(numString);
@@ -95,10 +96,6 @@ public final class BaseConv {
     int exp = 0;
     int intExp = 0;
     int subTotal = 0;
-
-    display(num);
-    display(splitNumber[0]);
-    display(splitNumber[1]);
 
     while (power(base, exp + 1) <= num) {
       exp ++;
