@@ -13,7 +13,7 @@ public final class BaseConv {
     userNumber = input.next();
     input.close();
     baseTenValue = toBaseTen(userNumber, startBase);
-    for (int base = 2; base <= 10; base ++) {
+    for (int base = 2; base <= 16; base ++) {
       display("Your number in base " + base + " is : " + toBaseN(baseTenValue, base));
     }
   }
@@ -34,8 +34,8 @@ public final class BaseConv {
     System.out.println(num);
   }
 
-  public static int hexToNum(char c) {
-    char[] letters = {'a', 'b', 'c', 'd', 'e', 'f'};
+  public static int hexToNum(String c) {
+    String[] letters = {"a", "b", "c", "d", "e", "f"};
     int value;
     
     for (int i = 0; i < letters.length; i++) {
@@ -44,18 +44,18 @@ public final class BaseConv {
         return value;
       }
     }
-    value = (int) c - '0';
+    value = Integer.parseInt(c);
     return value;
   }
 
-  public static char numToHex(int value) {
-    char[] letters = {'a', 'b', 'c', 'd', 'e', 'f'};
-    char c;
+  public static String numToHex(int value) {
+    String[] letters = {"a", "b", "c", "d", "e", "f"};
+    String c;
     
     if (value >= 10) {
       c = letters[value - 10];
     } else {
-      c = (char) value;
+      c = Integer.toString(value);
     }
     return c;
   }
@@ -75,23 +75,23 @@ public final class BaseConv {
   public static String toBaseTen(String fullNumber, int base) {
     String[] splitNumber = fullNumber.split("\\.", 2);
     String num = splitNumber[0], dec;
-    char[] numArray = num.toCharArray(), decArray;
+    String[] numArray = num.split("", num.length()), decArray;
     int numLength = numArray.length, decLength;
     double value = 0;
     double subValue;
     
     for (int i = 0; i < numLength; i++) {
-      char n = numArray[numLength - i - 1];
+      String n = numArray[numLength - i - 1];
       subValue = Math.pow(base, i) * hexToNum(n);
       value += subValue;
     }
 
     if (splitNumber.length > 1) {
       dec = splitNumber[1];
-      decArray = dec.toCharArray();
+      decArray = dec.split("", dec.length());
       decLength = decArray.length;
       for (int i = 0; i < decLength; i++) {
-        char n = decArray[i];
+        String n = decArray[i];
         subValue = power(base, -(i + 1)) * hexToNum(n);
         value += subValue;
       }
@@ -118,7 +118,7 @@ public final class BaseConv {
         subTotal += positionValue;
         n ++;
       }
-      newNumber += Integer.toString(n);
+      newNumber += numToHex(n);
     }
 
     if (splitNumber.length > 1) {
@@ -136,7 +136,7 @@ public final class BaseConv {
           subTotal += positionValue;
           n ++;
         }
-        newNumber += Integer.toString(n);
+        newNumber += numToHex(n);
         if (subTotal == dec)
           break;
       }
