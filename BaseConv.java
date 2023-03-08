@@ -35,7 +35,7 @@ public final class BaseConv {
   }
 
   public static int hexToNum(String c) {
-    String[] letters = {"a", "b", "c", "d", "e", "f"};
+    String letters[] = {"a", "b", "c", "d", "e", "f"};
     int value;
     
     for (int i = 0; i < letters.length; i++) {
@@ -49,7 +49,7 @@ public final class BaseConv {
   }
 
   public static String numToHex(int value) {
-    String[] letters = {"a", "b", "c", "d", "e", "f"};
+    String letters[] = {"a", "b", "c", "d", "e", "f"};
     String c;
     
     if (value >= 10) {
@@ -70,25 +70,24 @@ public final class BaseConv {
   }
 
   public static String toBaseTen(String fullNumber, int base) {
-    String[] splitNumber = fullNumber.split("\\.|$", 2);
+    String splitNumber[] = fullNumber.split("\\.|$", 2);
     String valueStr = "";
     String numString = splitNumber[0] + splitNumber[1];
-    String[] numArray = numString.split("");
+    String numArray[] = numString.split("");
     int exp = numString.length() - 1;
-    int value = 0;
+    double value = 0;
     
     for (int e = exp; e >= 0; e --) {
       int subValue = power(base, e) * hexToNum(numArray[numArray.length - (e + 1)]);
       value += subValue;
     }
 
-    // NEED TO ADD THE DECIMAL POINT SOMEWHERE HERE
     valueStr = Double.toString(value / power(base, splitNumber[1].length()));
     return valueStr;
   }
 
   public static String toBaseN(String fullNumber, int base) {
-    String[] splitNumber = fullNumber.split("\\.", 2);
+    String splitNumber[] = fullNumber.split("\\.|$", 2);
     String newNumber = "";
     String numString = splitNumber[1].equals("0") ? splitNumber[0] : splitNumber[0]  + splitNumber[1];
     int num = Integer.parseInt(numString);
@@ -104,7 +103,7 @@ public final class BaseConv {
     while (power(base, intExp + 1) <= integerPart) {
       intExp ++;
     }
-
+  // PROBLEM DURING CONVERSION TO EVERYTHING EXCEPT BASE 10
     for (int e = exp; e >= 0; e --) {
       if (e == exp - intExp - 1) {
         newNumber += ".";
