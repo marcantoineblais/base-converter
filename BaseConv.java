@@ -60,8 +60,8 @@ public final class BaseConv {
     return c;
   }
 
-  public static int power(int base, int exp) {
-    int result = 1;
+  public static long power(int base, int exp) {
+    long result = 1;
     for (int n = 0; n < Math.abs(exp); n ++) {
       result *= base;
     }
@@ -78,7 +78,7 @@ public final class BaseConv {
     double value = 0;
     
     for (int e = exp; e >= 0; e --) {
-      int subValue = power(base, e) * hexToNum(numArray[numArray.length - (e + 1)]);
+      long subValue = power(base, e) * hexToNum(numArray[numArray.length - (e + 1)]);
       value += subValue;
     }
 
@@ -89,35 +89,47 @@ public final class BaseConv {
   public static String toBaseN(String fullNumber, int base) {
     String splitNumber[] = fullNumber.split("\\.|$", 2);
     String newNumber = "";
-    String numString = splitNumber[1].equals("0") ? splitNumber[0] : splitNumber[0]  + splitNumber[1];
-    int num = Integer.parseInt(numString);
     int integerPart = Integer.parseInt(splitNumber[0]);
-    int exp = 0;
+    int decExp = splitNumber[1].length();
     int intExp = 0;
-    int subTotal = 0;
-
-    while (power(base, exp + 1) <= num) {
-      exp ++;
-    }
+    long intPart = Long.parseLong(splitNumber[0]);
+    long decPart = Long.parseLong(splitNumber[1]) * power(10, 16 - decExp);
+    long decRatio = power(10, 16);
+    long subTotal = 0;
 
     while (power(base, intExp + 1) <= integerPart) {
       intExp ++;
     }
-  // PROBLEM DURING CONVERSION TO EVERYTHING EXCEPT BASE 10
-    for (int e = exp; e >= 0; e --) {
-      if (e == exp - intExp - 1) {
-        newNumber += ".";
-      }
 
-      int positionValue = power(base, e);
+    for (int e = intExp; e >= 0; e --) {
+      long positionValue = power(base, e);
       int n = 0;
 
-      while (subTotal + positionValue <= num) {
+      while (subTotal + positionValue <= intPart) {
         subTotal += positionValue;
         n ++;
       }
+
       newNumber += numToHex(n);
     }
+
+    newNumber += ".";
+    subTotal = 0;
+
+    for (int p = 1; p < 16; p ++) {
+      long positionValue = decRatio / power(base, p);
+      int n = 0;
+
+      while(subTotal + positionValue <= decPart && n < base - 1) {
+        subTotal += positionValue;
+        n ++;
+      }
+
+      newNumber += numToHex(n);
+
+      if (subTotal >= decPart - 10)
+        break;
+    } 
 
     return newNumber;
   }
